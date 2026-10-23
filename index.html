@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Vận Hành & Tính Giá Vốn - Lợi Nhuận</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+
+  <div class="max-w-7xl mx-auto p-4 md:p-6">
+    <!-- Header -->
+    <header class="mb-6 flex flex-col md:flex-row justify-between md:items-center pb-4 border-b border-slate-200">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Bảng Điều Hành & Định Giá Sản Phẩm</h1>
+        <p class="text-sm text-slate-500">Quản lý kho NVL • Định mức BOM • Tính giá vốn thực tế & Lợi nhuận</p>
+      </div>
+      <div class="mt-4 md:mt-0 flex gap-2">
+        <button onclick="switchTab('inventory')" id="tab-btn-inv" class="px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white shadow-sm transition">1. Kho & Nhập NVL</button>
+        <button onclick="switchTab('bom')" id="tab-btn-bom" class="px-4 py-2 text-sm font-semibold rounded-lg bg-white text-slate-700 hover:bg-slate-100 border transition">2. Công Thức & Định Giá</button>
+        <button onclick="switchTab('products')" id="tab-btn-prod" class="px-4 py-2 text-sm font-semibold rounded-lg bg-white text-slate-700 hover:bg-slate-100 border transition">3. Báo Cáo Doanh Thu</button>
+      </div>
+    </header>
+
+    <!-- TAB 1: KHO - NHẬP - HAO HỤT -->
+    <section id="tab-inventory" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Form thêm NVL -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h2 class="text-lg font-bold mb-4 text-slate-800">Nhập Mới Nguyên Vật Liệu</h2>
+          <form id="inv-form" onsubmit="addMaterial(event)" class="space-y-3">
+            <div>
+              <label class="text-xs font-semibold text-slate-600">Tên NVL (Hoa/Phụ kiện/Bao bì)</label>
+              <input type="text" id="m-name" required placeholder="VD: Hồng Ohara đỏ, Xốp cắm..." class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Đơn vị tính (ĐVT)</label>
+                <input type="text" id="m-unit" required placeholder="Cành, Cuộn, Cái..." class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Số lượng nhập</label>
+                <input type="number" id="m-qty" required min="1" step="any" placeholder="0" class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Đơn giá nhập/ĐVT (VNĐ)</label>
+                <input type="number" id="m-price" required min="0" step="any" placeholder="15000" class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Dự trù Hao hụt (%)</label>
+                <input type="number" id="m-waste" required min="0" max="100" value="10" placeholder="10" class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-500 space-y-1">
+              <p>💡 <em>Giá vốn thực tế tính cả bù hao hụt:</em></p>
+              <p class="font-medium text-emerald-700">Giá gốc / (1 - % hao hụt)</p>
+            </div>
+            <button type="submit" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold shadow transition">Thêm Vào Kho</button>
+          </form>
+        </div>
+
+        <!-- Bảng danh sách tồn kho -->
+        <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-slate-800">Tồn Kho & Đơn Giá Kèm Hao Hụt</h2>
+            <span id="inv-count" class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">0 vật liệu</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-600">
+              <thead class="bg-slate-50 text-slate-700 uppercase font-semibold border-b">
+                <tr>
+                  <th class="py-2.5 px-3">Tên NVL</th>
+                  <th class="py-2.5 px-2">ĐVT</th>
+                  <th class="py-2.5 px-2 text-right">Tồn kho</th>
+                  <th class="py-2.5 px-2 text-right">Giá gốc</th>
+                  <th class="py-2.5 px-2 text-center">Hao hụt</th>
+                  <th class="py-2.5 px-2 text-right text-emerald-700 font-bold">Giá vốn tính BOM</th>
+                  <th class="py-2.5 px-2 text-center">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-list" class="divide-y divide-slate-100">
+                <!-- Data Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: BOM & TÍNH GIÁ SẢN PHẨM -->
+    <section id="tab-bom" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Khu vực thêm NVL vào công thức -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <h2 class="text-lg font-bold text-slate-800">1. Tạo Recipe (BOM)</h2>
+          <div>
+            <label class="text-xs font-semibold text-slate-600">Tên thành phẩm</label>
+            <input type="text" id="recipe-name" placeholder="VD: Bó Hoa Hồng Ohara Pastel Size M" class="w-full mt-1 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+          
+          <div class="border-t pt-3 space-y-2">
+            <label class="text-xs font-semibold text-slate-600">Chọn NVL từ kho đưa vào sản phẩm</label>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="col-span-2">
+                <select id="bom-select-material" class="w-full px-3 py-2 border rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                  <option value="">-- Chọn NVL --</option>
+                </select>
+              </div>
+              <div>
+                <input type="number" id="bom-qty" placeholder="Số lượng" min="0.1" step="any" class="w-full px-3 py-2 border rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+            </div>
+            <button onclick="addItemToRecipe()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold transition">+ Thêm vào thành phẩm</button>
+          </div>
+
+          <div class="border-t pt-3">
+            <h3 class="text-xs font-bold text-slate-700 uppercase mb-2">Định mức đang chọn</h3>
+            <div class="space-y-1 max-h-48 overflow-y-auto text-xs" id="current-recipe-items">
+              <p class="text-slate-400 italic">Chưa có nguyên liệu nào được chọn.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Khu vực tính chi phí & lợi nhuận -->
+        <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-5">
+          <h2 class="text-lg font-bold text-slate-800">2. Cấu Trúc Chi Phí & Định Giá Tự Động</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Chi phí công -->
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Công cắm / nhân công (VNĐ)</label>
+              <input type="number" id="cost-labor" oninput="calculateProductPricing()" value="30000" step="5000" class="w-full px-3 py-1.5 border rounded bg-white text-sm">
+              <span class="text-[10px] text-slate-400">Tiền công thợ trực tiếp</span>
+            </div>
+
+            <!-- Chi phí phụ/Vận hành -->
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Chi phí chung / Phân bổ (VNĐ)</label>
+              <input type="number" id="cost-overhead" oninput="calculateProductPricing()" value="20000" step="5000" class="w-full px-3 py-1.5 border rounded bg-white text-sm">
+              <span class="text-[10px] text-slate-400">Mặt bằng, điện nước, túi bóng, thiệp...</span>
+            </div>
+
+            <!-- Giá bán mong muốn -->
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+              <label class="text-xs font-semibold text-slate-600 block mb-1">Giá dự kiến bán ra (VNĐ)</label>
+              <input type="number" id="selling-price" oninput="calculateProductPricing()" value="0" step="10000" class="w-full px-3 py-1.5 border rounded bg-white text-sm font-bold text-emerald-700">
+              <span class="text-[10px] text-slate-400">Nhập giá để tính lãi hoặc chọn % lãi</span>
+            </div>
+          </div>
+
+          <!-- KẾT QUẢ TÍNH TOÁN -->
+          <div class="p-5 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-xl shadow-md">
+            <h3 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-4">Bảng Phân Tích Hiệu Quả Kinh Doanh (Thực Tế)</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <span class="text-xs text-slate-400 block">Tiền NVL (kèm hao hụt)</span>
+                <span id="res-material-cost" class="text-lg font-bold text-emerald-400">0 đ</span>
+              </div>
+              <div>
+                <span class="text-xs text-slate-400 block">Tổng giá vốn đầy đủ</span>
+                <span id="res-total-cost" class="text-lg font-bold text-amber-300">0 đ</span>
+              </div>
+              <div>
+                <span class="text-xs text-slate-400 block">Lợi Nhuận Ròng</span>
+                <span id="res-profit" class="text-lg font-bold text-white">0 đ</span>
+              </div>
+              <div>
+                <span class="text-xs text-slate-400 block">Tỷ Suất Lợi Nhuận</span>
+                <span id="res-margin" class="text-lg font-bold text-sky-400">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-2">
+            <button onclick="resetRecipe()" class="px-4 py-2 border rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50">Làm Mới</button>
+            <button onclick="saveProductRecipe()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow">Lưu Sản Phẩm Vào Danh Mục</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: DANH MỤC SẢN PHẨM & BÁN HÀNG -->
+    <section id="tab-products" class="hidden space-y-6">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        <h2 class="text-lg font-bold text-slate-800 mb-4">Danh Sách Sản Phẩm Tiêu Chuẩn (Đã Chuẩn Hóa BOM)</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 text-slate-700 uppercase font-semibold border-b">
+              <tr>
+                <th class="py-2.5 px-3">Tên Sản Phẩm</th>
+                <th class="py-2.5 px-2">Cấu phần BOM</th>
+                <th class="py-2.5 px-2 text-right">Tổng Vốn (NVL + Công + Phí)</th>
+                <th class="py-2.5 px-2 text-right">Giá Bán</th>
+                <th class="py-2.5 px-2 text-right font-bold text-emerald-700">Lãi Ròng</th>
+                <th class="py-2.5 px-2 text-center">Tỷ Suất LN</th>
+                <th class="py-2.5 px-2 text-center">Thao tác Xuất Bán</th>
+              </tr>
+            </thead>
+            <tbody id="saved-product-list" class="divide-y divide-slate-100">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Khởi tạo state từ localStorage hoặc rỗng
+    let inventory = JSON.parse(localStorage.getItem('app_inventory')) || [];
+    let savedProducts = JSON.parse(localStorage.getItem('app_products')) || [];
+    let currentRecipeItems = [];
+
+    // Format tiền tệ VNĐ
+    const fmt = (num) => new Intl.NumberFormat('vi-VN').format(Math.round(num)) + ' đ';
+
+    function saveData() {
+      localStorage.setItem('app_inventory', JSON.stringify(inventory));
+      localStorage.setItem('app_products', JSON.stringify(savedProducts));
+    }
+
+    // Chuyển Tab
+    function switchTab(tab) {
+      document.getElementById('tab-inventory').classList.add('hidden');
+      document.getElementById('tab-bom').classList.add('hidden');
+      document.getElementById('tab-products').classList.add('hidden');
+
+      document.getElementById('tab-btn-inv').className = "px-4 py-2 text-sm font-semibold rounded-lg bg-white text-slate-700 border hover:bg-slate-100 transition";
+      document.getElementById('tab-btn-bom').className = "px-4 py-2 text-sm font-semibold rounded-lg bg-white text-slate-700 border hover:bg-slate-100 transition";
+      document.getElementById('tab-btn-prod').className = "px-4 py-2 text-sm font-semibold rounded-lg bg-white text-slate-700 border hover:bg-slate-100 transition";
+
+      if(tab === 'inventory') {
+        document.getElementById('tab-inventory').classList.remove('hidden');
+        document.getElementById('tab-btn-inv').className = "px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white shadow-sm transition";
+      } else if(tab === 'bom') {
+        document.getElementById('tab-bom').classList.remove('hidden');
+        document.getElementById('tab-btn-bom').className = "px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white shadow-sm transition";
+        renderBOMSelect();
+      } else {
+        document.getElementById('tab-products').classList.remove('hidden');
+        document.getElementById('tab-btn-prod').className = "px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white shadow-sm transition";
+        renderSavedProducts();
+      }
+    }
+
+    // 1. NGHIỆP VỤ KHO & HAO HỤT
+    function addMaterial(e) {
+      e.preventDefault();
+      const name = document.getElementById('m-name').value.trim();
+      const unit = document.getElementById('m-unit').value.trim();
+      const qty = parseFloat(document.getElementById('m-qty').value);
+      const price = parseFloat(document.getElementById('m-price').value);
+      const waste = parseFloat(document.getElementById('m-waste').value) || 0;
+
+      // Đơn giá thực tế có bù trừ hao hụt: Price / (1 - %hao hụt)
+      const adjustedCost = price / (1 - (waste / 100));
+
+      const existingIndex = inventory.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
+      if(existingIndex >= 0) {
+        inventory[existingIndex].qty += qty;
+        inventory[existingIndex].price = price;
+        inventory[existingIndex].waste = waste;
+        inventory[existingIndex].adjustedCost = adjustedCost;
+      } else {
+        inventory.push({
+          id: Date.now().toString(),
+          name,
+          unit,
+          qty,
+          price,
+          waste,
+          adjustedCost
+        });
+      }
+
+      saveData();
+      renderInventory();
+      document.getElementById('inv-form').reset();
+    }
+
+    function deleteMaterial(id) {
+      if(confirm('Bạn có chắc muốn xóa nguyên liệu này?')) {
+        inventory = inventory.filter(item => item.id !== id);
+        saveData();
+        renderInventory();
+      }
+    }
+
+    function renderInventory() {
+      const tbody = document.getElementById('inventory-list');
+      tbody.innerHTML = '';
+      document.getElementById('inv-count').innerText = `${inventory.length} vật liệu`;
+
+      if(inventory.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-slate-400 italic">Chưa có dữ liệu tồn kho</td></tr>`;
+        return;
+      }
+
+      inventory.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50";
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-semibold text-slate-800">${item.name}</td>
+          <td class="py-2.5 px-2">${item.unit}</td>
+          <td class="py-2.5 px-2 text-right font-medium">${item.qty}</td>
+          <td class="py-2.5 px-2 text-right">${fmt(item.price)}</td>
+          <td class="py-2.5 px-2 text-center text-amber-600 font-semibold">${item.waste}%</td>
+          <td class="py-2.5 px-2 text-right font-bold text-emerald-700">${fmt(item.adjustedCost)}</td>
+          <td class="py-2.5 px-2 text-center">
+            <button onclick="deleteMaterial('${item.id}')" class="text-red-500 hover:text-red-700">Xóa</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 2. NGHIỆP VỤ BOM (CÔNG THỨC SẢN PHẨM)
+    function renderBOMSelect() {
+      const select = document.getElementById('bom-select-material');
+      select.innerHTML = '<option value="">-- Chọn NVL --</option>';
+      inventory.forEach(m => {
+        select.innerHTML += `<option value="${m.id}">${m.name} (Tồn: ${m.qty} ${m.unit})</option>`;
+      });
+    }
+
+    function addItemToRecipe() {
+      const select = document.getElementById('bom-select-material');
+      const qtyInput = document.getElementById('bom-qty');
+      const mId = select.value;
+      const qty = parseFloat(qtyInput.value);
+
+      if(!mId || !qty || qty <= 0) {
+        alert('Vui lòng chọn NVL và số lượng hợp lệ!');
+        return;
+      }
+
+      const mat = inventory.find(i => i.id === mId);
+      const existing = currentRecipeItems.find(i => i.id === mId);
+      
+      if(existing) {
+        existing.qty += qty;
+      } else {
+        currentRecipeItems.push({
+          id: mat.id,
+          name: mat.name,
+          unit: mat.unit,
+          adjustedCost: mat.adjustedCost,
+          qty: qty
+        });
+      }
+
+      qtyInput.value = '';
+      renderCurrentRecipe();
+      calculateProductPricing();
+    }
+
+    function removeRecipeItem(id) {
+      currentRecipeItems = currentRecipeItems.filter(i => i.id !== id);
+      renderCurrentRecipe();
+      calculateProductPricing();
+    }
+
+    function renderCurrentRecipe() {
+      const container = document.getElementById('current-recipe-items');
+      if(currentRecipeItems.length === 0) {
+        container.innerHTML = '<p class="text-slate-400 italic">Chưa có nguyên liệu nào được chọn.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      currentRecipeItems.forEach(item => {
+        const itemCost = item.qty * item.adjustedCost;
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center py-1 border-b border-slate-100";
+        div.innerHTML = `
+          <span>${item.name} x <b>${item.qty}</b> ${item.unit}</span>
+          <div class="flex items-center gap-2">
+            <span class="font-medium text-slate-700">${fmt(itemCost)}</span>
+            <button onclick="removeRecipeItem('${item.id}')" class="text-red-500 font-bold px-1 hover:text-red-700">&times;</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // 3. TÍNH TOÁN GIÁ VỐN & LỢI NHUẬN THỰC TẾ
+    function calculateProductPricing() {
+      const rawMaterialCost = currentRecipeItems.reduce((acc, cur) => acc + (cur.qty * cur.adjustedCost), 0);
+      const laborCost = parseFloat(document.getElementById('cost-labor').value) || 0;
+      const overheadCost = parseFloat(document.getElementById('cost-overhead').value) || 0;
+      const sellingPrice = parseFloat(document.getElementById('selling-price').value) || 0;
+
+      const totalCost = rawMaterialCost + laborCost + overheadCost;
+      const profit = sellingPrice - totalCost;
+      const margin = sellingPrice > 0 ? ((profit / sellingPrice) * 100).toFixed(1) : 0;
+
+      document.getElementById('res-material-cost').innerText = fmt(rawMaterialCost);
+      document.getElementById('res-total-cost').innerText = fmt(totalCost);
+      document.getElementById('res-profit').innerText = fmt(profit);
+      document.getElementById('res-margin').innerText = `${margin}%`;
+
+      if(profit < 0) {
+        document.getElementById('res-profit').className = "text-lg font-bold text-rose-400";
+      } else {
+        document.getElementById('res-profit').className = "text-lg font-bold text-emerald-400";
+      }
+
+      return { rawMaterialCost, laborCost, overheadCost, totalCost, sellingPrice, profit, margin };
+    }
+
+    function saveProductRecipe() {
+      const name = document.getElementById('recipe-name').value.trim();
+      if(!name) {
+        alert('Vui lòng đặt tên cho sản phẩm mẫu!');
+        return;
+      }
+      if(currentRecipeItems.length === 0) {
+        alert('Vui lòng thêm ít nhất 1 nguyên vật liệu vào công thức!');
+        return;
+      }
+
+      const metrics = calculateProductPricing();
+      if(metrics.sellingPrice <= 0) {
+        alert('Vui lòng thiết lập giá bán trước khi lưu!');
+        return;
+      }
+
+      const product = {
+        id: Date.now().toString(),
+        name,
+        recipe: [...currentRecipeItems],
+        ...metrics
+      };
+
+      savedProducts.push(product);
+      saveData();
+      alert('Đã lưu mẫu sản phẩm chuẩn thành công!');
+      resetRecipe();
+      switchTab('products');
+    }
+
+    function resetRecipe() {
+      currentRecipeItems = [];
+      document.getElementById('recipe-name').value = '';
+      document.getElementById('cost-labor').value = '30000';
+      document.getElementById('cost-overhead').value = '20000';
+      document.getElementById('selling-price').value = '0';
+      renderCurrentRecipe();
+      calculateProductPricing();
+    }
+
+    // 4. XUẤT BÁN & TRỪ KHO TỰ ĐỘNG
+    function sellProduct(productId) {
+      const prod = savedProducts.find(p => p.id === productId);
+      if(!prod) return;
+
+      // Kiểm tra kho có đủ NVL không
+      for(let item of prod.recipe) {
+        const invItem = inventory.find(i => i.id === item.id);
+        if(!invItem || invItem.qty < item.qty) {
+          alert(`Không đủ tồn kho cho [${item.name}]! (Hiện còn: ${invItem ? invItem.qty : 0} ${item.unit})`);
+          return;
+        }
+      }
+
+      if(confirm(`Xác nhận xuất bán 1 "${prod.name}"? Hệ thống sẽ tự động trừ kho nguyên liệu tương ứng.`)) {
+        // Trừ kho
+        prod.recipe.forEach(item => {
+          const invItem = inventory.find(i => i.id === item.id);
+          invItem.qty = Math.round((invItem.qty - item.qty) * 100) / 100;
+        });
+        saveData();
+        renderInventory();
+        alert('Xuất bán thành công! Kho đã được cập nhật.');
+      }
+    }
+
+    function renderSavedProducts() {
+      const tbody = document.getElementById('saved-product-list');
+      tbody.innerHTML = '';
+
+      if(savedProducts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-slate-400 italic">Chưa có sản phẩm chuẩn nào được lưu.</td></tr>`;
+        return;
+      }
+
+      savedProducts.forEach(prod => {
+        const bomSummary = prod.recipe.map(r => `${r.name} (${r.qty} ${r.unit})`).join(', ');
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50";
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-semibold text-slate-800">${prod.name}</td>
+          <td class="py-3 px-2 text-slate-500 max-w-xs truncate" title="${bomSummary}">${bomSummary}</td>
+          <td class="py-3 px-2 text-right font-medium">${fmt(prod.totalCost)}</td>
+          <td class="py-3 px-2 text-right font-bold">${fmt(prod.sellingPrice)}</td>
+          <td class="py-3 px-2 text-right font-bold ${prod.profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}">${fmt(prod.profit)}</td>
+          <td class="py-3 px-2 text-center font-semibold text-sky-600">${prod.margin}%</td>
+          <td class="py-3 px-2 text-center">
+            <button onclick="sellProduct('${prod.id}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium shadow-sm transition">Xuất bán (-Kho)</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Chạy khi khởi động trang
+    renderInventory();
+  </script>
+</body>
+</html>

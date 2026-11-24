@@ -41,7 +41,7 @@
 
       <div class="space-y-1.5">
         <span class="text-[10px] uppercase tracking-widest font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-          Cloud Sync Đang Hoạt Động
+          Đồng bộ Google Sheets
         </span>
         <h2 class="text-lg font-black text-slate-900 tracking-tight mt-1">KIM FLORA ERP PRO</h2>
         <p class="text-xs text-slate-500">Phần mềm quản trị độc lập của <strong>Kim Kim</strong></p>
@@ -85,12 +85,12 @@
       <!-- Trạng thái Cloud Sync -->
       <div class="bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm">
         <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i>
-        <span>Google Sheets Đã Kết Nối</span>
+        <span id="cloudSyncStatus" role="status" aria-live="polite">Chưa kiểm tra Google Sheets</span>
       </div>
 
       <!-- Nút làm mới dữ liệu -->
-      <button onclick="pullFromCloud(true)" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm" title="Tải lại dữ liệu mới nhất từ Google Sheets">
-        <i class="fa-solid fa-rotate text-sky-600" id="syncSpinIcon"></i> Làm mới Cloud
+      <button onclick="pullFromCloud()" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm" title="Kiểm tra Google Sheets và thử đồng bộ lại">
+        <i class="fa-solid fa-rotate text-sky-600" id="syncSpinIcon"></i> Đồng bộ lại
       </button>
 
       <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs overflow-x-auto max-w-full">
@@ -266,12 +266,16 @@
         <aside class="xl:col-span-3 bg-white rounded-2xl border border-slate-200 shadow-sm p-3 xl:sticky xl:top-2 max-h-[calc(100vh-120px)] overflow-y-auto">
           <div class="px-2 pt-1 pb-2 border-b border-slate-100 mb-2">
             <p class="text-[10px] uppercase tracking-widest font-black text-slate-400">Mục lục nhanh</p>
-            <p class="text-xs font-black text-slate-900 mt-1">13 phần cần nắm</p>
+            <p class="text-xs font-black text-slate-900 mt-1">Các phần trong cẩm nang</p>
           </div>
-          <nav class="space-y-0.5"><a href="#finance-chapter-1" onclick="document.getElementById('finance-chapter-1').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">1. Bắt đầu từ cách nhìn tiền</a><a href="#finance-chapter-2" onclick="document.getElementById('finance-chapter-2').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">2. Phép tính nền tảng và phần trăm</a><a href="#finance-chapter-3" onclick="document.getElementById('finance-chapter-3').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">3. Ghi đủ chi phí của một sản phẩm</a><a href="#finance-chapter-4" onclick="document.getElementById('finance-chapter-4').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">4. Tính giá bán và biết lời thật</a><a href="#finance-chapter-5" onclick="document.getElementById('finance-chapter-5').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">5. Tính lương và công cho nhân viên</a><a href="#finance-chapter-6" onclick="document.getElementById('finance-chapter-6').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">6. Mặt bằng, chi phí cố định và hòa vốn</a><a href="#finance-chapter-7" onclick="document.getElementById('finance-chapter-7').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">7. Vốn ban đầu và thời gian thu hồi vốn</a><a href="#finance-chapter-8" onclick="document.getElementById('finance-chapter-8').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">8. Mua hàng thế nào để có lợi</a><a href="#finance-chapter-9" onclick="document.getElementById('finance-chapter-9').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">9. Quản lý tiền để không nhầm lãi với tiền trong quỹ</a><a href="#finance-chapter-10" onclick="document.getElementById('finance-chapter-10').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">10. Bài thực hành tự tính</a><a href="#finance-chapter-11" onclick="document.getElementById('finance-chapter-11').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">11. Quy trình 10 phút trước khi chốt giá</a><a href="#finance-chapter-12" onclick="document.getElementById('finance-chapter-12').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">12. Từ vựng tài chính cần nhớ</a><a href="#finance-chapter-13" onclick="document.getElementById('finance-chapter-13').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">13. Bảng nhắc công thức</a></nav>
+          <nav id="financeGuideNav" class="space-y-0.5"><a href="#finance-chapter-1" onclick="document.getElementById('finance-chapter-1').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">1. Bắt đầu từ cách nhìn tiền</a><a href="#finance-chapter-2" onclick="document.getElementById('finance-chapter-2').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">2. Phép tính nền tảng và phần trăm</a><a href="#finance-chapter-3" onclick="document.getElementById('finance-chapter-3').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">3. Ghi đủ chi phí của một sản phẩm</a><a href="#finance-chapter-4" onclick="document.getElementById('finance-chapter-4').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">4. Tính giá bán và biết lời thật</a><a href="#finance-chapter-5" onclick="document.getElementById('finance-chapter-5').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">5. Tính lương và công cho nhân viên</a><a href="#finance-chapter-6" onclick="document.getElementById('finance-chapter-6').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">6. Mặt bằng, chi phí cố định và hòa vốn</a><a href="#finance-chapter-7" onclick="document.getElementById('finance-chapter-7').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">7. Vốn ban đầu và thời gian thu hồi vốn</a><a href="#finance-chapter-8" onclick="document.getElementById('finance-chapter-8').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">8. Mua hàng thế nào để có lợi</a><a href="#finance-chapter-9" onclick="document.getElementById('finance-chapter-9').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">9. Quản lý tiền để không nhầm lãi với tiền trong quỹ</a><a href="#finance-chapter-10" onclick="document.getElementById('finance-chapter-10').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">10. Bài thực hành tự tính</a><a href="#finance-chapter-11" onclick="document.getElementById('finance-chapter-11').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">11. Quy trình 10 phút trước khi chốt giá</a><a href="#finance-chapter-12" onclick="document.getElementById('finance-chapter-12').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">12. Từ vựng tài chính cần nhớ</a><a href="#finance-chapter-13" onclick="document.getElementById('finance-chapter-13').scrollIntoView({behavior:'smooth', block:'start'}); return false;" class="block px-3 py-2 rounded-lg text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-800 transition">13. Bảng nhắc công thức</a></nav>
         </aside>
 
-        <div class="xl:col-span-9 space-y-4">
+        <div id="financeGuideContent" class="xl:col-span-9 space-y-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" id="guideAdd" class="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-bold text-white">+ Thêm nội dung</button>
+            <span id="guideStatus" class="text-xs text-slate-600" role="status">Các chỉnh sửa được lưu trên thiết bị này.</span>
+          </div>
           <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 md:p-6 space-y-3">
             <p class="text-xs md:text-sm font-bold text-slate-700 leading-relaxed">Từ phép tính cơ bản đến giá bán, lương, hòa vốn và thu hồi vốn</p><p class="text-xs md:text-sm font-bold text-slate-700 leading-relaxed">Dành cho Kim Flora | Học chậm, hiểu chắc, thay số của shop để dùng</p><p class="text-xs md:text-sm font-bold text-slate-700 leading-relaxed">Mục tiêu của tài liệu là giúp tui tự đọc được tiền vào – tiền ra, biết một sản phẩm có lời thật hay không, biết mỗi tháng cần bán bao nhiêu để trang trải chi phí, và ước tính thời gian thu hồi khoản vốn đã bỏ ra. Không cần tính nhẩm nhanh: cứ viết số xuống, dùng đúng công thức, rồi kiểm tra lại bằng máy tính hoặc bảng tính.</p><p class="text-xs md:text-sm text-slate-700 leading-7">Các số tiền trong ví dụ chỉ để luyện cách tính, không phải báo giá hay dự báo doanh thu của shop. Kết quả thực tế phụ thuộc giá hoa từng ngày, phí sàn, thuế và cách vận hành của Kim Flora.</p><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">Bản đồ học nhanh</h4><div class="overflow-x-auto rounded-xl border border-slate-200 my-4"><table class="w-full text-left text-[11px] md:text-xs min-w-[560px] border-collapse"><thead class="bg-emerald-800 text-white"><tr><th class="p-2.5 font-black align-top border-r border-emerald-700 last:border-r-0"><strong>Chặng</strong></th><th class="p-2.5 font-black align-top border-r border-emerald-700 last:border-r-0"><strong>Sau chặng này tui làm được</strong></th></tr></thead><tbody class="divide-y divide-slate-200"><tr class="bg-white"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">1. Nền tảng số và phần trăm</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Đọc phép cộng trừ, tính phần trăm, giảm giá, hao hụt và phí.</td></tr><tr class="bg-slate-50"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">2. Giá vốn và công</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Ghi đủ vật liệu, thời gian làm, hao hụt, đóng gói và giao hàng.</td></tr><tr class="bg-white"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">3. Giá bán và lợi nhuận</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Tìm giá bán tối thiểu, tính lãi gộp, lãi sau chi phí và biên lợi nhuận.</td></tr><tr class="bg-slate-50"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">4. Nhân viên và mặt bằng</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Tính công theo giờ/sản phẩm, phân bổ chi phí cố định, điểm hòa vốn.</td></tr><tr class="bg-white"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">5. Mua hàng và dòng tiền</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">So sánh khuyến mãi, chọn lượng mua vừa sức, tách tiền vốn và tiền lời.</td></tr><tr class="bg-slate-50"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">6. Thu hồi vốn và kế hoạch</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Ước lượng thời gian hoàn vốn, lập bảng theo dõi và ra quyết định an toàn.</td></tr></tbody></table></div>
           </section>
@@ -291,7 +295,7 @@
               <div class="px-4 md:px-6 py-4 bg-slate-50 border-b border-slate-200">
                 <h3 class="text-base md:text-lg font-black text-slate-900">4. Tính giá bán và biết lời thật</h3>
               </div>
-              <div class="p-4 md:p-6 space-y-3"><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">4.1 Tách phí theo đơn và chi phí cố định</h4><p class="text-xs md:text-sm text-slate-700 leading-7">Phí theo đơn tăng theo giá trị/số đơn, như phần trăm nền tảng, thanh toán hoặc bao bì giao hàng. Chi phí cố định vẫn phát sinh dù tháng đó ít đơn, như mặt bằng, internet hoặc lương cố định. Mỗi khoản chỉ đưa vào một nơi để tránh tính hai lần.</p><p class="text-xs md:text-sm text-slate-700 leading-7">Nếu sàn thu theo tỷ lệ doanh thu, dùng tỷ lệ hiện tại trong tài khoản bán hàng và xác định khoản phí tính trên cơ sở nào. Không mặc định mọi loại phí đều tính trên cùng một con số. Khuyến mãi do shop tài trợ cũng phải ghi riêng.</p><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">4.2 Công thức giá bán tối thiểu khi phí là tỷ lệ</h4><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Giá bán = (Giá vốn trực tiếp + Chi phí cố định phân bổ + Lãi mục tiêu) ÷ (1 − Tỷ lệ phí theo doanh thu)</strong></div><p class="text-xs md:text-sm text-slate-700 leading-7">Ví dụ luyện tập: giá vốn trực tiếp 246.000đ; chi phí chung phân bổ 30.000đ; muốn còn 80.000đ sau phí; phí theo doanh thu giả định 10%. Tổng cần giữ lại là 356.000đ. Giá bán = 356.000 ÷ 0,90 = 395.556đ, có thể cân nhắc mức giá bán phù hợp thị trường từ khoảng 396.000đ trở lên. Đây là ví dụ, không phải khuyến nghị giá cho mẫu cụ thể.</p><p class="text-xs md:text-sm text-slate-700 leading-7">Kiểm tra lại: phí 10% của 395.556 ≈ 39.556đ. 395.556 − 246.000 − 30.000 − 39.556 ≈ 80.000đ.</p><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">4.3 Giá vốn cộng lãi khác với biên lợi nhuận</h4><div class="overflow-x-auto rounded-xl border border-slate-200 my-4"><table class="w-full text-left text-[11px] md:text-xs min-w-[560px] border-collapse"><thead class="bg-emerald-800 text-white"><tr><th class="p-2.5 font-black align-top border-r border-emerald-700 last:border-r-0"><strong>Cách nói</strong></th><th class="p-2.5 font-black align-top border-r border-emerald-700 last:border-r-0"><strong>Công thức</strong></th><th class="p-2.5 font-black align-top border-r border-emerald-700 last:border-r-0"><strong>Ví dụ với vốn 100.000đ</strong></th></tr></thead><tbody class="divide-y divide-slate-200"><tr class="bg-white"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Cộng thêm 30% trên vốn</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Giá = Vốn × 1,30</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">130.000đ; phần chênh 30.000đ.</td></tr><tr class="bg-slate-50"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Muốn biên lợi nhuận 30% trên giá bán</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Giá = Vốn ÷ (1 − 0,30)</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">142.857đ; lãi chiếm 30% giá bán trước các khoản chưa tính.</td></tr></tbody></table></div><p class="text-xs md:text-sm text-slate-700 leading-7">“Tăng 30%” và “biên lợi nhuận 30%” không giống nhau. Muốn biết biên thực tế, phải tính trên doanh thu sau khi trừ các chi phí liên quan.</p><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Biên lợi nhuận = Lợi nhuận ÷ Doanh thu × 100%</strong></div><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">4.4 Lãi gộp, lãi hoạt động và lãi ròng</h4><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Lãi gộp = Doanh thu − Giá vốn hàng bán</strong></div><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Lãi hoạt động gần đúng = Lãi gộp − Chi phí vận hành</strong></div><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Lãi ròng = Tổng doanh thu − Toàn bộ chi phí hợp lệ của kỳ</strong></div><p class="text-xs md:text-sm text-slate-700 leading-7">Theo dõi theo tháng: tổng đơn hoàn thành, doanh thu đã ghi nhận, giá vốn của hàng đã bán, phí sàn/khuyến mãi, lương, mặt bằng, điện nước, quảng cáo, hư hỏng, lãi vay và các chi phí khác. Tiền chủ shop tự rút nên theo dõi tách bạch khỏi chi phí sản phẩm; nếu chủ shop trực tiếp làm, vẫn nên ghi công quản trị để biết mô hình có thực sự trả công cho thời gian của mình hay không.</p></div></section><section id="finance-chapter-5" class="finance-chapter bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden scroll-mt-4" data-finance-title="5. tính lương và công cho nhân viên">
+              <div class="p-4 md:p-6 space-y-3"><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">4.1 Tách phí theo đơn và chi phí cố định</h4><p class="text-xs md:text-sm text-slate-700 leading-7">Phí theo đơn tăng theo giá trị/số đơn, như phần trăm nền tảng, thanh toán hoặc bao bì giao hàng. Chi phí cố định vẫn phát sinh dù tháng đó ít đơn, như mặt bằng, internet hoặc lương cố định. Mỗi khoản chỉ đưa vào một nơi để tránh tính hai lần.</p><p class="text-xs md:text-sm text-slate-700 leading-7">Nếu sàn thu theo tỷ lệ doanh thu, dùng tỷ lệ hiện tại trong tài khoản bán hàng và xác định khoản phí tính trên cơ sở nào. Không mặc định mọi loại phí đều tính trên cùng một con số. Khuyến mãi do shop tài trợ cũng phải ghi riêng.</p><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">4.2 Công thức giá bán tối thiểu khi phí là tỷ lệ</h4><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Giá bán = (Giá vốn trực tiếp + Chi phí cố định phân bổ + Lãi mục tiêu) ÷ (1 − Tỷ lệ phí theo doanh thu)</strong></div><p class="text-xs md:text-sm text-slate-700 leading-7">Ví dụ luyện tập: giá vốn trực tiếp 246.000đ; chi phí chung phân bổ 30.000đ; muốn còn 80.000đ sau phí; phí theo doanh thu giả định 10%. Tổng cần giữ lại là 356.000đ. Giá bán = 356.000 ÷ 0,90 = 395.556đ, có thể cân nhắc mức giá bán phù hợp thị trường từ khoảng 396.000đ trở lên. Đây là ví dụ, không phải khuyến nghị giá cho mẫu cụ thể.</p><p class="text-xs md:text-sm text-slate-700 leading-7">Kiểm tra lại: phí 10% của 395.556 ≈ 39.556đ. 395.556 − 246.000 − 30.000 − 39.556 ≈ 80.000đ.</p><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">4.3 Giá vốn cộng lãi khác với biên lợi nhuận</h4><div class="overflow-x-auto rounded-xl border border-slate-200 my-4"><table class="w-full text-left text-[11px] md:text-xs min-w-[560px] border-collapse"><thead class="bg-emerald-800 text-white"><tr><th class="p-2.5 font-black align-top border-r border-emerald-700 last:border-r-0"><strong>Cách nói</strong></th><th class="p-2.5 font-black align-top border-r border-emerald-700 last:border-r-0"><strong>Công thức</strong></th><th class="p-2.5 font-black align-top border-r border-emerald-700 last:border-r-0"><strong>Ví dụ với vốn 100.000đ</strong></th></tr></thead><tbody class="divide-y divide-slate-200"><tr class="bg-white"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Cộng thêm 30% trên vốn</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Giá = Vốn × 1,30</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">130.000đ; phần chênh 30.000đ.</td></tr><tr class="bg-slate-50"><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Muốn biên lợi nhuận 30% trên giá bán</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">Giá = Vốn ÷ (1 − 0,30)</td><td class="p-2.5 align-top text-slate-700 leading-relaxed border-r border-slate-200 last:border-r-0">142.857đ; lãi chiếm 30% giá bán trước các khoản chưa tính.</td></tr></tbody></table></div><p class="text-xs md:text-sm text-slate-700 leading-7">“Tăng 30%” và “biên lợi nhuận 30%” không giống nhau. Muốn biết biên thực tế, phải tính trên doanh thu sau khi trừ các chi phí liên quan.</p><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Biên lợi nhuận = Lợi nhuận ÷ Doanh thu × 100%</strong></div><h4 class="text-sm md:text-base font-black text-emerald-900 pt-2">4.4 Lãi gộp, lãi hoạt động và lãi ròng</h4><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Lãi gộp = Doanh thu − Giá vốn hàng bán</strong></div><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Lãi hoạt động gần đúng = Lãi gộp − Chi phí vận hành</strong></div><div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs md:text-sm font-black text-emerald-900 leading-relaxed"><strong>Lãi ròng = Tổng doanh thu − Toàn bộ chi phí hợp lệ của kỳ</strong></div><p class="text-xs md:text-sm text-slate-700 leading-7">Theo dõi theo tháng: tổng đơn hoàn thành, doanh thu đã ghi nhận, giá vốn của hàng đã bán, phí sàn/khuyến mãi, lương, mặt bằng, điện nước, quảng cáo, hư hỏng, lãi vay và các chi phí khác. Tiền chủ shop tự rút nên theo dõi tách bạch khỏi chi phí sản phẩm; nếu chủ shop trực tiếp làm, vẫn nên ghi công quản trị để biết mô hình có thực sự trả công cho thời gian của mình hay không.</p><p class="px-4 pb-4 text-xs md:text-sm text-slate-700 leading-7">Với biên lãi mục tiêu theo phần trăm giá bán, giá đề xuất = (giá vốn trực tiếp + chi phí cố định phân bổ) ÷ (1 − tỷ lệ phí kênh − biên lãi mục tiêu). Ví dụ, chi phí 300.000đ, phí kênh 20% và biên lãi mục tiêu 20% cho giá đề xuất 500.000đ. Tổng hai tỷ lệ phải nhỏ hơn 100%.</p></div></section><section id="finance-chapter-5" class="finance-chapter bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden scroll-mt-4" data-finance-title="5. tính lương và công cho nhân viên">
               <div class="px-4 md:px-6 py-4 bg-slate-50 border-b border-slate-200">
                 <h3 class="text-base md:text-lg font-black text-slate-900">5. Tính lương và công cho nhân viên</h3>
               </div>
@@ -523,8 +527,12 @@
                   <input type="number" id="cfg_est_orders" oninput="calcPricingLive()" value="100" class="w-full border rounded-lg p-2 bg-slate-50 font-bold text-center">
                 </div>
                 <div>
-                  <label class="block text-slate-700 font-bold mb-1">Biên lãi ròng (%):</label>
+                  <label class="block text-slate-700 font-bold mb-1">Biên lãi mục tiêu (% giá bán):</label>
                   <input type="number" id="target_margin" oninput="calcPricingLive()" value="35" class="w-full border border-emerald-400 rounded-lg p-2 bg-emerald-50 text-emerald-800 font-black text-center">
+                </div>
+                <div>
+                  <label for="pricing_fee_pct" class="block text-slate-700 font-bold mb-1">Phí kênh (% giá bán):</label>
+                  <input type="number" id="pricing_fee_pct" min="0" max="99.99" step="0.01" oninput="calcPricingLive()" value="0" class="w-full rounded-lg border bg-slate-50 p-2 font-bold">
                 </div>
               </div>
             </div>
@@ -1013,54 +1021,102 @@
       document.getElementById("privateAuthLock").classList.remove("hidden");
     }
 
-    // Tự động đẩy dữ liệu lên Google Sheets
-    async function pushToCloud() {
-      const payload = {
-        inventory: store.inventory,
-        recipeLines: store.recipeLines,
-        products: store.products,
-        orders: store.orders,
-        cashFlow: store.cashFlow,
-        plans: store.plans || [],
-        updatedAt: new Date().toISOString()
-      };
+    const syncMetaKey = "KF_SYNC_META_V1";
+    const cloudCollections = ["inventory", "recipeLines", "products", "orders", "cashFlow", "plans"];
+    let syncMeta = JSON.parse(localStorage.getItem(syncMetaKey) || '{"revision":null,"pending":false}');
+    let syncQueue = Promise.resolve();
+    let localRevision = 0;
 
+    function setSyncStatus(message) {
+      document.getElementById("cloudSyncStatus").textContent = message;
+    }
+
+    function saveSyncMeta(changes) {
+      syncMeta = { ...syncMeta, ...changes };
+      localStorage.setItem(syncMetaKey, JSON.stringify(syncMeta));
+    }
+
+    async function cloudRevision(data) {
+      const canonicalize = value => {
+        if (Array.isArray(value)) return value.map(canonicalize);
+        if (value && typeof value === "object") {
+          return Object.fromEntries(Object.keys(value).sort().map(key => [key, canonicalize(value[key])]));
+        }
+        return value;
+      };
+      const bytes = new TextEncoder().encode(JSON.stringify(canonicalize(data)));
+      const hash = await crypto.subtle.digest("SHA-256", bytes);
+      return Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function readCloud() {
+      const response = await fetch(CLOUD_SYNC_ENDPOINT, { cache: "no-store", signal: AbortSignal.timeout(12000) });
+      if (!response.ok) throw new Error("Cloud không phản hồi");
+      const data = await response.json();
+      const required = cloudCollections.filter(key => key !== "plans");
+      if (!data || !required.every(key => Array.isArray(data[key])) ||
+          ("plans" in data && !Array.isArray(data.plans))) {
+        throw new Error("Dữ liệu Cloud chưa đầy đủ");
+      }
+      const snapshot = Object.fromEntries(cloudCollections.filter(key => key in data).map(key => [key, data[key]]));
+      return { snapshot, revision: await cloudRevision(snapshot) };
+    }
+
+    async function syncCloud() {
+      const spin = document.getElementById("syncSpinIcon");
+      spin.classList.add("fa-spin");
+      setSyncStatus("Đang kiểm tra Google Sheets…");
       try {
-        await fetch(CLOUD_SYNC_ENDPOINT, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-      } catch (e) {
-        console.warn("Đang lưu trữ cục bộ, lỗi mạng:", e);
+        const remote = await readCloud();
+        if (!syncMeta.pending) {
+          if (remote.revision !== syncMeta.revision) {
+            Object.assign(store, remote.snapshot);
+            normalizeStore();
+            persistLocalOnly();
+            saveSyncMeta({ revision: remote.revision });
+          }
+          setSyncStatus("Đã kiểm tra Google Sheets");
+          return;
+        }
+
+        const savingRevision = localRevision;
+        const payload = Object.fromEntries(cloudCollections.map(key => [key, store[key]]));
+        const body = JSON.stringify({ ...payload, updatedAt: new Date().toISOString() });
+        const expectedSnapshot = await cloudRevision(JSON.parse(JSON.stringify(payload)));
+        if (remote.revision !== expectedSnapshot) {
+          if (remote.revision !== syncMeta.revision) {
+            setSyncStatus("Có bản khác trên Cloud · Đã giữ thay đổi trên máy");
+            return;
+          }
+          await fetch(CLOUD_SYNC_ENDPOINT, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body,
+            signal: AbortSignal.timeout(12000)
+          });
+          let confirmed = await readCloud();
+          for (let attempt = 0; attempt < 2 && confirmed.revision === remote.revision; attempt++) {
+            await new Promise(resolve => setTimeout(resolve, 600));
+            confirmed = await readCloud();
+          }
+          if (confirmed.revision !== expectedSnapshot) {
+            setSyncStatus("Chưa xác nhận bản lưu Cloud · Đã giữ thay đổi trên máy");
+            return;
+          }
+        }
+        saveSyncMeta({ revision: expectedSnapshot, pending: localRevision !== savingRevision });
+        setSyncStatus(syncMeta.pending ? "Còn thay đổi chờ đồng bộ" : "Đã đồng bộ Google Sheets");
+      } catch (error) {
+        setSyncStatus(syncMeta.pending ? "Chưa đồng bộ · Đã giữ thay đổi trên máy" : "Chưa kiểm tra được Google Sheets");
+      } finally {
+        spin.classList.remove("fa-spin");
       }
     }
 
-    // Tự động kéo dữ liệu từ Google Sheets về
-    async function pullFromCloud(showNotify = false) {
-      const spin = document.getElementById("syncSpinIcon");
-      if (spin) spin.classList.add("fa-spin");
-
-      try {
-        const resp = await fetch(CLOUD_SYNC_ENDPOINT);
-        const data = await resp.json();
-
-        if (data && data.inventory && data.orders) {
-          store.inventory = data.inventory;
-          store.recipeLines = data.recipeLines || [];
-          store.products = data.products || [];
-          store.orders = data.orders;
-          store.cashFlow = data.cashFlow || [];
-          if (Array.isArray(data.plans)) store.plans = data.plans;
-          persistLocalOnly();
-          if (showNotify) alert("Đã kéo toàn bộ dữ liệu mới nhất từ Google Sheets!");
-        }
-      } catch (e) {
-        if (showNotify) alert("Chưa có dữ liệu mới trên Google Sheets hoặc mạng chập chờn.");
-      } finally {
-        if (spin) spin.classList.remove("fa-spin");
-      }
+    function pullFromCloud() {
+      syncQueue = syncQueue.then(syncCloud);
+      return syncQueue;
     }
 
     const DEFAULT_INVENTORY = [
@@ -1391,8 +1447,10 @@
     }
 
     function persist() {
+      localRevision++;
+      saveSyncMeta({ pending: true });
       persistLocalOnly();
-      pushToCloud();
+      pullFromCloud();
     }
 
     const fmtVND = (n) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n || 0);
@@ -1725,6 +1783,150 @@
       return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
     }
 
+    function sanitizeGuideHtml(html) {
+      const template = document.createElement("template");
+      template.innerHTML = html;
+      const tags = new Set("DIV P BR SPAN STRONG B EM I U H4 H5 H6 UL OL LI TABLE THEAD TBODY TFOOT TR TH TD BLOCKQUOTE".split(" "));
+      for (const element of template.content.querySelectorAll("*")) {
+        if (!tags.has(element.tagName)) {
+          element.replaceWith(document.createTextNode(element.textContent || ""));
+          continue;
+        }
+        for (const attr of Array.from(element.attributes)) {
+          if (!["class", "colspan", "rowspan"].includes(attr.name)) element.removeAttribute(attr.name);
+        }
+      }
+      return template.innerHTML;
+    }
+
+    function initFinanceGuide() {
+      const content = document.getElementById("financeGuideContent");
+      const nav = document.getElementById("financeGuideNav");
+      const status = document.getElementById("guideStatus");
+      const storageKey = "KF_FINANCE_GUIDE_V1";
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem(storageKey)) || {}; }
+      catch { status.textContent = "Chưa đọc được bản chỉnh sửa đã lưu."; }
+
+      function attachEditor(section, draft = false) {
+        const heading = section.querySelector("h3");
+        const header = heading.parentElement;
+        const body = header.nextElementSibling;
+        let link = Array.from(nav.querySelectorAll("a")).find(item => item.hash === "#" + section.id);
+        if (!link) {
+          link = document.createElement("a");
+          link.className = "block rounded-lg px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-emerald-50";
+          link.href = "#" + section.id;
+          link.textContent = "Nội dung mới";
+          link.addEventListener("click", event => {
+            event.preventDefault();
+            section.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+          nav.append(link);
+        }
+
+        function display(entry) {
+          heading.textContent = entry.title;
+          body.innerHTML = sanitizeGuideHtml(entry.html);
+          body.classList.add("whitespace-pre-wrap");
+          link.textContent = entry.title;
+        }
+        if (saved[section.id]) display(saved[section.id]);
+
+        const actions = document.createElement("div");
+        actions.className = "mt-2 flex flex-wrap gap-2";
+        header.append(actions);
+
+        function button(label, handler) {
+          const control = document.createElement("button");
+          control.type = "button";
+          control.className = "rounded-lg border border-emerald-200 bg-white px-3 py-1.5 text-xs font-bold text-emerald-800";
+          control.textContent = label;
+          control.addEventListener("click", handler);
+          actions.append(control);
+        }
+
+        function showReadMode() {
+          actions.replaceChildren();
+          button("Chỉnh sửa", edit);
+        }
+
+        function edit() {
+          const original = body.innerHTML;
+          const title = document.createElement("input");
+          title.className = "mt-2 w-full rounded-lg border border-slate-300 p-2 text-sm";
+          title.placeholder = "Tiêu đề";
+          title.setAttribute("aria-label", "Tiêu đề cẩm nang");
+          title.value = heading.textContent;
+          heading.hidden = true;
+          heading.after(title);
+          body.setAttribute("contenteditable", "plaintext-only");
+          body.setAttribute("aria-label", "Nội dung cẩm nang");
+          body.classList.add("outline", "outline-1", "outline-emerald-500");
+          actions.replaceChildren();
+
+          function close() {
+            title.remove();
+            heading.hidden = false;
+            body.removeAttribute("contenteditable");
+            body.removeAttribute("aria-label");
+            body.classList.remove("outline", "outline-1", "outline-emerald-500");
+            showReadMode();
+          }
+
+          button("Lưu nội dung", () => {
+            if (!title.value.trim() || !body.textContent.trim()) {
+              status.textContent = "Nhập tiêu đề và nội dung trước khi lưu.";
+              (!title.value.trim() ? title : body).focus();
+              return;
+            }
+            const entry = { title: title.value.trim(), html: sanitizeGuideHtml(body.innerHTML) };
+            const next = { ...saved, [section.id]: entry };
+            try { localStorage.setItem(storageKey, JSON.stringify(next)); }
+            catch {
+              status.textContent = "Chưa lưu được. Nội dung vẫn còn trong ô chỉnh sửa.";
+              return;
+            }
+            saved = next;
+            display(entry);
+            draft = false;
+            close();
+            status.textContent = "Đã lưu nội dung trên thiết bị này.";
+          });
+
+          button("Hủy", () => {
+            if (draft) {
+              section.remove();
+              link.remove();
+              return;
+            }
+            body.innerHTML = original;
+            close();
+          });
+          title.focus();
+        }
+
+        if (draft) edit();
+        else showReadMode();
+      }
+
+      function addSection(id, draft) {
+        const section = document.createElement("section");
+        section.id = id;
+        section.className = "finance-chapter scroll-mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm";
+        section.innerHTML = '<div class="border-b border-slate-200 bg-slate-50 px-4 py-4 md:px-6"><h3 class="text-lg font-black text-slate-900"></h3></div><div class="min-h-24 whitespace-pre-wrap p-4 text-sm leading-7 md:p-6"></div>';
+        content.append(section);
+        attachEditor(section, draft);
+        return section;
+      }
+
+      content.querySelectorAll("section.finance-chapter").forEach(section => attachEditor(section));
+      Object.keys(saved).filter(id => id.startsWith("finance-custom-")).forEach(id => addSection(id, false));
+      document.getElementById("guideAdd").addEventListener("click", () => {
+        addSection("finance-custom-" + crypto.randomUUID(), true).scrollIntoView({ block: "start" });
+      });
+    }
+
     function setQuickQty(val) {
       document.getElementById("add_recipe_qty").value = val;
     }
@@ -1757,7 +1959,7 @@
       const tbody = document.getElementById("recipeTableBody");
       tbody.innerHTML = store.recipeLines.map((it, idx) => {
         const lineTotal = it.qty * it.cost;
-        const lineAfterLoss = lineTotal * (1 + (it.lossPct / 100));
+        const lineAfterLoss = unitCost(lineTotal, 1 - it.lossPct / 100);
 
         return `
           <tr class="hover:bg-slate-50 transition">
@@ -1792,32 +1994,42 @@
       persist();
     }
 
+    function unitCost(cost, usableQuantity) {
+      return usableQuantity > 0 ? cost / usableQuantity : NaN;
+    }
+
+    function salePrice(cost, feeRate, targetMargin = 0) {
+      const totalRate = feeRate + targetMargin;
+      return feeRate >= 0 && targetMargin >= 0 && totalRate < 1 ? cost / (1 - totalRate) : NaN;
+    }
+
     function calcPricingLive() {
       let matAfterLoss = 0;
       store.recipeLines.forEach(it => {
-        matAfterLoss += (it.qty * it.cost) * (1 + (it.lossPct / 100));
+        matAfterLoss += unitCost(it.qty * it.cost, 1 - it.lossPct / 100);
       });
 
       const minutes = parseFloat(document.getElementById("labor_minutes").value) || 0;
-      const wageHour = parseFloat(document.getElementById("labor_wage_hour").value) || 40000;
+      const wageHour = Number(document.getElementById("labor_wage_hour").value || 40000);
       const laborVal = Math.round((minutes / 60) * wageHour);
 
-      const rent = parseFloat(document.getElementById("cfg_rent").value) || 2000000;
-      const electric = parseFloat(document.getElementById("cfg_electric").value) || 1050000;
-      const estOrders = parseFloat(document.getElementById("cfg_est_orders").value) || 100;
+      const rent = Number(document.getElementById("cfg_rent").value || 2000000);
+      const electric = Number(document.getElementById("cfg_electric").value || 1050000);
+      const estOrders = Number(document.getElementById("cfg_est_orders").value || 100);
       const fixedPerOrder = estOrders > 0 ? Math.round((rent + electric) / estOrders) : 0;
 
       const variableCOGS = matAfterLoss + laborVal;
       const pricingCost = variableCOGS + fixedPerOrder;
-      const targetMargin = (parseFloat(document.getElementById("target_margin").value) || 35) / 100;
-      const denom = 1 - targetMargin;
-      const suggestedPrice = denom > 0 ? Math.round(pricingCost / denom) : pricingCost;
+      const targetMargin = Number(document.getElementById("target_margin").value) / 100;
+      const feeRate = Number(document.getElementById("pricing_fee_pct").value) / 100;
+      const price = salePrice(pricingCost, feeRate, targetMargin);
+      const suggestedPrice = Math.ceil(Number(price.toFixed(6)));
 
       document.getElementById("res_mat_cost").innerText = fmtVND(matAfterLoss);
       document.getElementById("res_labor_val").innerText = fmtVND(laborVal);
       document.getElementById("res_fixed_val").innerText = fmtVND(fixedPerOrder);
       document.getElementById("res_total_cogs").innerText = fmtVND(pricingCost);
-      document.getElementById("res_suggested_price").innerText = fmtVND(suggestedPrice);
+      document.getElementById("res_suggested_price").innerText = Number.isFinite(suggestedPrice) ? fmtVND(suggestedPrice) : "Kiểm tra phí và biên lãi";
 
       return { variableCOGS, laborVal, matAfterLoss, fixedPerOrder, pricingCost, totalCOGS: pricingCost, suggestedPrice };
     }
@@ -1825,6 +2037,9 @@
     function transferToStep2Products() {
       const { variableCOGS, laborVal, fixedPerOrder, pricingCost, suggestedPrice } = calcPricingLive();
       const name = document.getElementById("recipe_name").value.trim();
+      if (!name || !store.recipeLines.length || !Number.isFinite(suggestedPrice)) {
+        return alert("Nhập tên, nguyên liệu và kiểm tra phí, biên lãi trước khi lưu mẫu.");
+      }
       const size = document.getElementById("recipe_size").value;
       const newId = nextId("SP", store.products, "id", 3);
 
@@ -1988,7 +2203,7 @@
           return;
         }
         const lossPct = Number(it.lossPct || 0);
-        materialCost += Number(it.qty || 0) * Number(inv.retailCost || 0) * (1 + lossPct / 100);
+        materialCost += unitCost(Number(it.qty || 0) * Number(inv.retailCost || 0), 1 - lossPct / 100);
       });
       if (!canRecalc) return Number(p.cogs || 0);
       const laborCost = Number(p.laborCost || 0);
@@ -2091,7 +2306,7 @@
 
       persist();
       generateOrderCodeLive();
-      alert(`Đã lưu đơn [${code}], trừ kho và gửi dữ liệu đồng bộ!`);
+      alert(`Đã lưu đơn [${code}] trên máy và trừ kho.`);
     }
 
     function renderOrdersTable() {
@@ -2286,9 +2501,9 @@
 
       const currentMonth = new Date().toISOString().slice(0, 7);
       const monthlyOrders = store.orders.filter(o => String(o.date || "").slice(0, 7) === currentMonth);
-      const fixedRent = parseFloat(document.getElementById("cfg_rent")?.value) || 2000000;
-      const fixedElec = parseFloat(document.getElementById("cfg_electric")?.value) || 1050000;
-      const estOrders = parseFloat(document.getElementById("cfg_est_orders")?.value) || 100;
+      const fixedRent = Number(document.getElementById("cfg_rent").value || 2000000);
+      const fixedElec = Number(document.getElementById("cfg_electric").value || 1050000);
+      const estOrders = Number(document.getElementById("cfg_est_orders").value || 100);
       const legacyFixedPerOrder = estOrders > 0 ? Math.round((fixedRent + fixedElec) / estOrders) : 0;
 
       monthlyOrders.forEach(o => {
@@ -2385,8 +2600,6 @@
       const unitPrice = parseFloat(document.getElementById("inv_in_bulk_unit_price").value) || 0;
       const qty = parseFloat(document.getElementById("inv_in_bulk_qty").value) || 0;
       const ratio = parseFloat(document.getElementById("inv_conversion_ratio").value) || 1;
-      const minStock = parseFloat(document.getElementById("inv_min_stock").value) || 0;
-
       const bulkUnit = document.getElementById("inv_in_bulk_unit").value;
       const retailUnit = document.getElementById("inv_in_retail_unit").value;
 
@@ -2414,6 +2627,11 @@
       const bulkQty = parseFloat(document.getElementById("inv_in_bulk_qty").value) || 0;
       const ratio = parseFloat(document.getElementById("inv_conversion_ratio").value) || 1;
 
+      const minStock = Number(document.getElementById("inv_min_stock").value);
+      if (!Number.isFinite(minStock) || minStock < 0 || ratio <= 0) {
+        return alert("Tỷ lệ quy đổi phải lớn hơn 0 và tồn tối thiểu phải từ 0 trở lên.");
+      }
+
       if (!name || bulkQty <= 0 || unitPrice <= 0) {
         return alert("Vui lòng nhập tên hoa/vật tư, đơn giá sỉ 1 kiện và số lượng mua sỉ!");
       }
@@ -2424,7 +2642,8 @@
       const exist = store.inventory.find(i => 
         i.name.toLowerCase() === name.toLowerCase() && 
         i.color.toLowerCase() === color.toLowerCase() &&
-        i.supplier.toLowerCase() === supplier.toLowerCase()
+        i.supplier.toLowerCase() === supplier.toLowerCase() &&
+        i.retailUnit === retailUnit
       );
 
       if (exist) {
@@ -2644,7 +2863,7 @@
 
       if (fcHas("buyCost","buyFees","buyDiscount","usableQty")) {
         const total=fcValue("buyCost")+fcValue("buyFees")-fcValue("buyDiscount"), qty=fcValue("usableQty");
-        fcPut("fc_unitCost",qty>0?fcMoney(total/qty):"Nhập lượng dùng được > 0");
+        fcPut("fc_unitCost",qty>0?fcMoney(unitCost(total, qty)):"Nhập lượng dùng được > 0");
         fcPut("fc_unitCostNote",qty>0?"Tổng chi phí tính vào lô: "+fcMoney(total):"Lượng dùng được phải lớn hơn 0.");
       } else {fcPut("fc_unitCost","—");fcPut("fc_unitCostNote","Nhập tổng chi phí và lượng dùng được.");}
 
@@ -2654,8 +2873,8 @@
 
       if(fcHas("priceCost","priceOverhead","priceTarget","priceFeeRate")) {
         const fee=fcValue("priceFeeRate")/100, numerator=fcValue("priceCost")+fcValue("priceOverhead")+fcValue("priceTarget");
-        if(fee>=1) {fcPut("fc_suggestedPrice","Tỷ lệ phí phải nhỏ hơn 100%");fcPut("fc_priceNote","Kiểm tra lại tỷ lệ phí theo doanh thu.");}
-        else {const price=numerator/(1-fee);fcPut("fc_suggestedPrice",fcMoney(price));fcPut("fc_priceNote","Phí ước tính: "+fcMoney(price*fee)+" · Giá làm tròn lên nghìn: "+fcMoney(Math.ceil(price/1000)*1000));}
+        if(fee<0 || fee>=1) {fcPut("fc_suggestedPrice","Tỷ lệ phí phải nhỏ hơn 100%");fcPut("fc_priceNote","Kiểm tra lại tỷ lệ phí theo doanh thu.");}
+        else {const price=salePrice(numerator, fee);fcPut("fc_suggestedPrice",fcMoney(price));fcPut("fc_priceNote","Phí ước tính: "+fcMoney(price*fee)+" · Giá làm tròn lên nghìn: "+fcMoney(Math.ceil(price/1000)*1000));}
       } else {fcPut("fc_suggestedPrice","—");fcPut("fc_priceNote","Công thức: (vốn + chi phí chung + lãi mục tiêu) ÷ (1 − tỷ lệ phí).");}
 
       if(fcHas("actualPrice","actualCost","actualFeeRate")) {
@@ -2711,6 +2930,7 @@
     window.addEventListener("DOMContentLoaded", () => {
       checkPrivateAuth();
       initFinanceCalculator();
+      initFinanceGuide();
     });
   </script>
 </body>
